@@ -1,11 +1,18 @@
 import streamlit as st
 import json
 import os
+import uuid
 
 # ---------------- SETTINGS ----------------
 DAILY_TARGET = 420
 PRODUCT_FILE = "products.json"
-LOG_FILE = "daily_log.json"
+
+# ---------------- DEVICE INDEPENDENCE ----------------
+if 'device_id' not in st.session_state:
+    st.session_state['device_id'] = str(uuid.uuid4())
+
+device_id = st.session_state['device_id']
+LOG_FILE = f"daily_log_{device_id}.json"  # file separato per ogni device
 
 # ---------------- LOAD / SAVE ----------------
 def load_products():
@@ -55,7 +62,6 @@ def save_log(log):
 PRODUCTS = load_products()
 DATA = load_log()
 
-# Initialize session_state for updates safely
 if 'update' not in st.session_state:
     st.session_state['update'] = 0
 
