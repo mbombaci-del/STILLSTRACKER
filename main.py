@@ -36,6 +36,10 @@ def save_log(log):
 PRODUCTS = load_products()
 DATA = load_log()
 
+# Initialize session_state for updates
+if 'update' not in st.session_state:
+    st.session_state.update = 0
+
 # ---------------- UI ----------------
 st.set_page_config(page_title="Still Life Tracker", layout="wide")
 st.title("📸 Still Life Shooting Tracker")
@@ -71,6 +75,8 @@ for name, minutes in PRODUCTS.items():
         })
         DATA["total_minutes"] += total_time
         save_log(DATA)
+        # Trigger a re-run using session_state
+        st.session_state.update += 1
         st.experimental_rerun()
     i += 1
 
@@ -87,6 +93,7 @@ if DATA["logs"]:
             DATA["total_minutes"] -= item["total"]
             DATA["logs"].pop(idx)
             save_log(DATA)
+            st.session_state.update += 1
             st.experimental_rerun()
 else:
     st.write("No products logged yet")
@@ -123,6 +130,7 @@ with st.expander("Edit / Add Products"):
                     log["name"] = new_name
             save_products(PRODUCTS)
             save_log(DATA)
+            st.session_state.update += 1
             st.experimental_rerun()
 
     st.divider()
@@ -142,4 +150,5 @@ st.divider()
 if st.button("🗑️ Reset Day"):
     DATA = {"logs": [], "total_minutes": 0}
     save_log(DATA)
+    st.session_state.update += 1
     st.experimental_rerun()
