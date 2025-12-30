@@ -12,7 +12,7 @@ def load_products():
     if os.path.exists(PRODUCT_FILE):
         with open(PRODUCT_FILE, "r") as f:
             return json.load(f)
-    # Default products inserted directly
+    # Default products
     return {
         "BAGS": 14,
         "SCARVES": 20,
@@ -81,7 +81,6 @@ quantity = st.number_input(
     step=1
 )
 
-# Pulsanti grandi, layout 2 colonne per tablet/mobile
 cols = st.columns(2)
 i = 0
 for name, minutes in PRODUCTS.items():
@@ -95,8 +94,7 @@ for name, minutes in PRODUCTS.items():
         })
         DATA["total_minutes"] += total_time
         save_log(DATA)
-        st.session_state['update'] += 1
-        st.experimental_rerun()
+        st.session_state['update'] = st.session_state.get('update', 0) + 1
     i += 1
 
 # ---------------- TODAY LOG ----------------
@@ -112,8 +110,7 @@ if DATA["logs"]:
             DATA["total_minutes"] -= item["total"]
             DATA["logs"].pop(idx)
             save_log(DATA)
-            st.session_state['update'] += 1
-            st.experimental_rerun()
+            st.session_state['update'] = st.session_state.get('update', 0) + 1
 else:
     st.write("No products logged yet")
 
@@ -149,8 +146,7 @@ with st.expander("Edit / Add Products"):
                     log["name"] = new_name
             save_products(PRODUCTS)
             save_log(DATA)
-            st.session_state['update'] += 1
-            st.experimental_rerun()
+            st.session_state['update'] = st.session_state.get('update', 0) + 1
 
     st.divider()
 
@@ -169,5 +165,4 @@ st.divider()
 if st.button("🗑️ Reset Day"):
     DATA = {"logs": [], "total_minutes": 0}
     save_log(DATA)
-    st.session_state['update'] += 1
-    st.experimental_rerun()
+    st.session_state['update'] = st.session_state.get('update', 0) + 1
