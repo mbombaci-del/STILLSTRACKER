@@ -12,10 +12,29 @@ def load_products():
     if os.path.exists(PRODUCT_FILE):
         with open(PRODUCT_FILE, "r") as f:
             return json.load(f)
+    # Default products inserted directly
     return {
-        "Product A": 25,
-        "Product B": 40,
-        "Product C": 30
+        "BAGS": 14,
+        "SCARVES": 20,
+        "KIDS SINGLES": 10,
+        "KIDS SETS": 14,
+        "WALLETS": 12,
+        "TIES": 8,
+        "JEWELLERY": 28,
+        "MENS UNDERWEAR": 20,
+        "WOMENS UNDERWEAR": 10,
+        "WOMENS UNDEWEAR SETS": 14,
+        "SOCKS": 10,
+        "POCKET SQUARES": 14,
+        "BELTS": 14,
+        "HATS": 10,
+        "MANNEQUINS PLUS SIZE": 20,
+        "COMMUNION DRESSES": 20,
+        "MIXED 02 SHOTS": 8,
+        "SUNGLASSES": 20,
+        "SHOES": 14,
+        "BLANKETS": 10,
+        "BOW TIES": 10
     }
 
 def save_products(products):
