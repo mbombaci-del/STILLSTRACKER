@@ -36,9 +36,9 @@ def save_log(log):
 PRODUCTS = load_products()
 DATA = load_log()
 
-# Initialize session_state for updates
+# Initialize session_state for updates safely
 if 'update' not in st.session_state:
-    st.session_state.update = 0
+    st.session_state['update'] = 0
 
 # ---------------- UI ----------------
 st.set_page_config(page_title="Still Life Tracker", layout="wide")
@@ -62,10 +62,11 @@ quantity = st.number_input(
     step=1
 )
 
-cols = st.columns(3)
+# Pulsanti grandi, layout 2 colonne per tablet/mobile
+cols = st.columns(2)
 i = 0
 for name, minutes in PRODUCTS.items():
-    if cols[i % 3].button(f"{name} ({minutes} min)"):
+    if cols[i % 2].button(f"{name} ({minutes} min)", key=f"prod_{i}"):
         total_time = minutes * quantity
         DATA["logs"].append({
             "name": name,
@@ -75,8 +76,7 @@ for name, minutes in PRODUCTS.items():
         })
         DATA["total_minutes"] += total_time
         save_log(DATA)
-        # Trigger a re-run using session_state
-        st.session_state.update += 1
+        st.session_state['update'] += 1
         st.experimental_rerun()
     i += 1
 
@@ -93,7 +93,7 @@ if DATA["logs"]:
             DATA["total_minutes"] -= item["total"]
             DATA["logs"].pop(idx)
             save_log(DATA)
-            st.session_state.update += 1
+            st.session_state['update'] += 1
             st.experimental_rerun()
 else:
     st.write("No products logged yet")
@@ -130,7 +130,7 @@ with st.expander("Edit / Add Products"):
                     log["name"] = new_name
             save_products(PRODUCTS)
             save_log(DATA)
-            st.session_state.update += 1
+            st.session_state['update'] += 1
             st.experimental_rerun()
 
     st.divider()
@@ -150,5 +150,5 @@ st.divider()
 if st.button("🗑️ Reset Day"):
     DATA = {"logs": [], "total_minutes": 0}
     save_log(DATA)
-    st.session_state.update += 1
+    st.session_state['update'] += 1
     st.experimental_rerun()
